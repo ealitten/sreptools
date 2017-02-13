@@ -7,12 +7,6 @@ function main() {
   var scheduleDate = itemResponses[1].getResponse();
   dois = dois.split("\n").filter(Boolean);
   
-  /*
-  //Test content
-  var scheduleDate = "19/05/2016";
-  var dois = ["srep25042","srep25046"];
-  */
-    
   //Open Go Live, get sheets
   var golive = SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/1F9dr6Jcy-V8epCeDN8uIdvno3emcWG9jGN6sXlQyt3o/edit");
   SpreadsheetApp.setActiveSpreadsheet(golive);
@@ -103,20 +97,11 @@ function main() {
                ":<br/><br/><table><tr><strong><td>DOI</td><td>Author</td><td>Email address</td></strong></tr>" + outputMovedRows(movedRows) + "</table>";                             
  };
   
- /* Email with no paper details           
- if (movedRows.length > 0) {
-   emailBody += "The following papers have been scheduled for " + scheduleDate +
-         ":\n\n" + movedRows.toString().replaceAll(",", "\n");
-   emailBodyHTML += "<p style='font-family:arial;'>The following papers have been scheduled for " + scheduleDate +
-               ":<br/><br/>" + movedRows.toString().replaceAll(",", "<br/>");                            
- };
- */
-  
  if (skippedRows.length > 0) {
    emailBody += "\nThe following papers were not scheduled due to an error " +
          ":\n\n" + skippedRows.toString().replaceAll(",", "\n");
    emailBodyHTML += "<p style='font-family:arial;'><br/>The following papers were not scheduled due to an error " +
-               ":<br/><br/>" + skippedRows.toString().replaceAll(",", "<br/>");
+         ":<br/><br/>" + skippedRows.toString().replaceAll(",", "<br/>");
  };
   
  if (movedRows.length == 0 && skippedRows.length == 0) { 
@@ -143,38 +128,9 @@ String.prototype.replaceAll = function(search, replace) {
 };
 
 function outputMovedRows(arr) {
-  var contents = ""
+  var contents = "";
   for (var x = 0; x < arr.length; x++) {
   contents += arr[x].detailsTableRow();
   }
   return contents;
 };
-
-function test() {
-  //Test content
-  var scheduleDate = "19/05/2016";
-  var dois = ["srep23887","srep25046"];
-  
-  //Open Go Live, get sheets
-  var golive = SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/1F9dr6Jcy-V8epCeDN8uIdvno3emcWG9jGN6sXlQyt3o/edit");
-  SpreadsheetApp.setActiveSpreadsheet(golive);
-  var sheetInProduction = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("In Production");
-  var sheetScheduled = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Scheduled");
-  var sheetLookup = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Lookup");
-  var movedRows = [];
-  var skippedRows = [];
-  
-        var dataEmailAddress = "";
-        var lastRowLookup = sheetLookup.getLastRow();
-        var doisLookup = sheetLookup.getRange(2,6,lastRowLookup,1).getValues();
-        for (k = 0; k < doisLookup.length; k++) {
-          var doiMatch2 = doisLookup[k].toString().search(dois[0]);
-          if (doiMatch2 >= 0) {
-            dataEmailAddress = sheetLookup.getRange(k+1,5).getValue().toString();
-            Logger.log(dataEmailAddress);
-            break;
-          };
-        };
-
-};
-  
